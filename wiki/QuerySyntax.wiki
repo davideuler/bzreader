@@ -5,19 +5,13 @@ BzReader is using an excellent [http://incubator.apache.org/lucene.net/ Lucene.N
 
 = Terms =
 
-A query is broken up into terms and operators. There are two types of terms: Single Terms and Phrases.
-
-A Single Term is a single word such as "test" or "hello". 
-
-A Phrase is a group of words surrounded by double quotes such as "hello dolly".
+A query is broken up into terms and operators. There are two types of terms: Single Terms and Phrases. A Single Term is a single word such as "test" or "hello". A Phrase is a group of words surrounded by double quotes such as "hello dolly".
 
 Multiple terms can be combined together with Boolean operators to form a more complex query (see below).
 
 = Wildcard Searches =
 
-To perform a single character wildcard search use the "?" symbol.
-
-To perform a multiple character wildcard search use the "`*`" symbol.
+To perform a single character wildcard search use the "?" symbol. To perform a multiple character wildcard search use the "`*`" symbol.
 
 The single character wildcard search looks for terms that match that with the single character replaced. For example, to search for "text" or "test" you can use the search:
 
