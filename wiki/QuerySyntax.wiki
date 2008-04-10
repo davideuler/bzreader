@@ -19,7 +19,7 @@ The single character wildcard search looks for terms that match that with the si
 
 Multiple character wildcard searches looks for 0 or more characters. For example, to search for test, tests or tester, you can use the search:
 
-  test`*
+  test`*`
 
 You can also use the wildcard searches in the middle of a term.
 
