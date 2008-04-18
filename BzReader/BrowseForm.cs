@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace BzReader
@@ -52,9 +53,24 @@ namespace BzReader
         }
 
         /// <summary>
+        /// The ID of the search (to be able to cancel and identify them)
+        /// </summary>
+        private int searchIdentifier = 0;
+
+        /// <summary>
+        /// The search item
+        /// </summary>
+        private struct SearchItem
+        {
+            public int SearchIdentifier;
+            public string SearchText;
+            public HitCollection Hits;
+        };
+
+        /// <summary>
         /// Executes the search using the currently entered text
         /// </summary>
-        private void LaunchSearch()
+        private void LaunchSearch(bool interactive)
         {
             if (indexes.Count == 0)
             {
@@ -64,26 +80,105 @@ namespace BzReader
             searchStatusLabel.Text = "Searching for '" + searchBox.Text + "'";
 
             searchLaunched = true;
-            loadingResults = true;
+
+            searchIdentifier++;
+
+            if (!interactive)
+            {
+                SearchItem si = new SearchItem();
+
+                si.SearchIdentifier = searchIdentifier;
+                si.SearchText = searchBox.Text;
+
+                ThreadPool.QueueUserWorkItem(BackgroundSearch, si);
+
+                return;
+            }
 
             HitCollection hits = Indexer.Search(searchBox.Text, indexes.Values, Indexer.MAX_SEARCH_HITS);
 
-            hitsBox.DataSource = hits;
-            hitsBox.SelectedItem = null;
+            searchStatusLabel.Text = String.Empty;
 
-            loadingResults = false;
+            if (String.IsNullOrEmpty(hits.ErrorMessages))
+            {
+                loadingResults = true;
 
-            searchStatusLabel.Text = hits.HadMoreHits ? "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results" : String.Empty;
+                hitsBox.DataSource = hits;
+                hitsBox.SelectedItem = null;
+
+                loadingResults = false;
+
+                if (hits.HadMoreHits)
+                {
+                    searchStatusLabel.Text = "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results";
+                }
+            }
+            else
+            {
+                MessageBox.Show(this, hits.ErrorMessages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
-        /// Cancels any pending search request
+        /// Does the Lucene search in background and returns the results, if any
+        /// </summary>
+        /// <param name="state">The state object</param>
+        private void BackgroundSearch(object state)
+        {
+            SearchItem si = (SearchItem)state;
+
+            try
+            {
+                si.Hits = Indexer.Search(si.SearchText, indexes.Values, Indexer.MAX_SEARCH_HITS);
+            }
+            catch (Exception ex)
+            {
+                si.Hits = new HitCollection();
+
+                si.Hits.ErrorMessages = ex.Message;
+            }
+
+            Invoke(new BackgroundSearchFinishedDelegate(BackgroundSearchFinished), si);
+        }
+
+        /// <summary>
+        /// The delegate for the callback on the 'search finished' event
+        /// </summary>
+        /// <param name="si">Search item</param>
+        private delegate void BackgroundSearchFinishedDelegate(SearchItem si);
+
+        /// <summary>
+        /// Gets called from the background thread whenever the background search finishes
+        /// </summary>
+        /// <param name="si">Search item</param>
+        private void BackgroundSearchFinished(SearchItem si)
+        {
+            if (searchIdentifier == si.SearchIdentifier &&
+                String.IsNullOrEmpty(si.Hits.ErrorMessages))
+            {
+                loadingResults = true;
+
+                hitsBox.DataSource = si.Hits;
+                hitsBox.SelectedItem = null;
+
+                loadingResults = false;
+
+                searchStatusLabel.Text = si.Hits.HadMoreHits ? "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results" : String.Empty;
+            }
+            else
+            {
+                searchStatusLabel.Text = String.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Cancels any pending search request. Just increments the ID to make any pending search results irrelevant
         /// </summary>
         private void CancelSearch()
         {
             searchStatusLabel.Text = String.Empty;
-
-            searchLaunched = false;
+            
+            searchIdentifier++;
         }
 
         /// <summary>
@@ -157,7 +252,7 @@ namespace BzReader
             if (e.KeyCode == Keys.Return ||
                 e.KeyCode == Keys.Enter)
             {
-                LaunchSearch();
+                LaunchSearch(true);
             }
         }
 
@@ -300,7 +395,7 @@ namespace BzReader
                 DateTime.Now.Subtract(lastTextChange.Value) > TimeSpan.FromMilliseconds(AUTOSEARCH_DELAY) &&
                 searchBox.Text.Length > 2)
             {
-                LaunchSearch();
+                LaunchSearch(false);
             }
         }
 

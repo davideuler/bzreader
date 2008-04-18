@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -734,6 +735,7 @@ namespace BzReader
             public string SearchRequest;
             public int MaxResults;
             public HitCollection Hits;
+            public Queue<Exception> Errors;
         }
 
         /// <summary>
@@ -760,54 +762,89 @@ namespace BzReader
             si.Hits = ret;
             si.SearchRequest = searchRequest;
             si.MaxResults = maxResults;
+            si.Errors = new Queue<Exception>();
 
             // I can't really be sure about the thread safety of Lucene
 
-            lock (typeof(Indexer))
+            try
             {
-                foreach (Indexer ixr in indexers)
+                lock (typeof(Indexer))
                 {
-                    int i = 0;
-                    
-                    while (ixr.searchRunning &&
-                        i < 30)
+                    foreach (Indexer ixr in indexers)
                     {
-                        Thread.Sleep(100);
+                        int i = 0;
 
-                        i++;
+                        while (ixr.searchRunning &&
+                            i < 30)
+                        {
+                            Thread.Sleep(100);
+
+                            i++;
+                        }
+
+                        if (i >= 30)
+                        {
+                            throw new Exception("Failed starting the search work item due to timeout");
+                        }
+
+                        ixr.searchRunning = true;
                     }
 
-                    if (i >= 30)
+                    foreach (Indexer ixr in indexers)
                     {
-                        throw new Exception("Failed starting the search work item due to timeout");
+                        ThreadPool.QueueUserWorkItem(ixr.Search, si);
                     }
 
-                    ixr.searchRunning = true;
-                }
-
-                foreach (Indexer ixr in indexers)
-                {
-                    ThreadPool.QueueUserWorkItem(ixr.Search, si);
-                }
-
-                foreach (Indexer ixr in indexers)
-                {
-                    int i = 0;
-                    
-                    while (ixr.searchRunning &&
-                        i < 30)
+                    foreach (Indexer ixr in indexers)
                     {
-                        Thread.Sleep(100);
+                        int i = 0;
 
-                        i++;
-                    }
+                        while (ixr.searchRunning &&
+                            i < 30)
+                        {
+                            Thread.Sleep(100);
 
-                    if (i >= 30)
-                    {
-                        throw new Exception("Failed finishing the search work item due to timeout");
+                            i++;
+                        }
+
+                        if (i >= 30)
+                        {
+                            throw new Exception("Failed finishing the search work item due to timeout");
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                lock (si.Errors)
+                {
+                    si.Errors.Enqueue(ex);
+                }
+            }
+
+            StringCollection sc = new StringCollection();
+
+            lock (si.Errors)
+            {
+                while (si.Errors.Count > 0)
+                {
+                    Exception ex = si.Errors.Dequeue();
+
+                    if (!sc.Contains(ex.Message))
+                    {
+                        sc.Add(ex.Message);
+                    }
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string message in sc)
+            {
+                sb.AppendLine(message);
+            }
+
+            ret.ErrorMessages = sb.Length > 0 ? sb.ToString() : String.Empty;
 
             return ret;
         }
@@ -854,9 +891,10 @@ namespace BzReader
             }
             catch (Exception ex)
             {
-                // What to do here?...
-
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                lock (si.Errors)
+                {
+                    si.Errors.Enqueue(ex);
+                }
             }
 
             searchRunning = false;
