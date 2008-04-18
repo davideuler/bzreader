@@ -19,6 +19,19 @@ namespace BzReader
         /// Whether there were more hits in search that is being returned
         /// </summary>
         private bool hadMoreHits = false;
+        /// <summary>
+        /// The error messages which were returned by Lucene while searching the indices
+        /// </summary>
+        private string errorMessages = String.Empty;
+
+        /// <summary>
+        /// The error messages which were returned by Lucene while searching the indices
+        /// </summary>
+        public string ErrorMessages
+        {
+            get { return errorMessages; }
+            set { errorMessages = value; }
+        }
 
         /// <summary>
         /// Whether there were more hits in search that is being returned

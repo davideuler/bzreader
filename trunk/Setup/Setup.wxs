@@ -43,6 +43,8 @@
 			<ComponentRef Id="bzip2.dll" />
 		</Feature>
 
+		<Condition Message="You need to have Microsoft .NET Framework Runtime v2.0 or later to use this product">MsiNetAssemblySupport &gt;= "2.0.50727"</Condition>
+		<Condition Message="You need to have Windows Installer 2.0 or later to install this product">VersionMsi &gt;= "2.0"</Condition>
 		<Icon Id="BzReader.exe" SourceFile="$(sys.SOURCEFILEDIR)..\BzReader\bin\$(var.Configuration)\BzReader.exe" />
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION"/>
 		<UIRef Id="WixUI_InstallDir" />

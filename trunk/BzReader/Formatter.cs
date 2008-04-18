@@ -21,7 +21,7 @@ namespace ScrewTurn.Wiki
 
 		private static Regex noWiki = new Regex(@"\<nowiki\>(.|\n|\r)+?\<\/nowiki\>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 		private static Regex link = new Regex(@"(\[\[.+?\]\])|(\[.+?\])", RegexOptions.Compiled);
-		private static Regex redirection = new Regex(@"^\#REDIRECT\ \[\[(.*)\]\]", RegexOptions.Compiled | RegexOptions.Multiline);
+		private static Regex redirection = new Regex(@"^\#REDIRECT.*\[\[(.*)\]\]", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 		private static Regex h1 = new Regex(@"^==.+?==", RegexOptions.Compiled | RegexOptions.Multiline);
 		private static Regex h2 = new Regex(@"^===.+?===", RegexOptions.Compiled | RegexOptions.Multiline);
 		private static Regex h3 = new Regex(@"^====.+?====", RegexOptions.Compiled | RegexOptions.Multiline);
