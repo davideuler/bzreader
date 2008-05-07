@@ -17,7 +17,7 @@ namespace BzReader
         /// <summary>
         /// The port we're listening on
         /// </summary>
-        public readonly int Port;
+        private int port;
         /// <summary>
         /// The TCP listener
         /// </summary>
@@ -60,7 +60,7 @@ namespace BzReader
 
             listener.Start();
 
-            Port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            port = ((IPEndPoint)listener.LocalEndpoint).Port;
 
             Thread t = new Thread(ProcessRequests);
 
@@ -93,9 +93,9 @@ namespace BzReader
         /// </summary>
         /// <param name="term">The request term to generate the URL for</param>
         /// <returns>The URL</returns>
-        public string GenerateUrl(string term)
+        public string GenerateUrl(PageInfo page)
         {
-            return String.Format("http://localhost:{0}/{1}", Port, HttpUtility.UrlEncode(term));
+            return new UrlRequestedEventArgs(page, port).Url;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace BzReader
             if (!String.IsNullOrEmpty(redirectLocation))
             {
                 sb.Append("Location: ");
-                sb.AppendLine(GenerateUrl(redirectLocation));
+                sb.AppendLine(redirectLocation);
             }
 
             sb.AppendLine("Accept-Ranges: bytes");
@@ -127,7 +127,7 @@ namespace BzReader
             sb.AppendLine();
             sb.AppendLine();
 
-            socket.Send(Encoding.ASCII.GetBytes(sb.ToString()));
+            socket.Send(Encoding.UTF8.GetBytes(sb.ToString()));
         }
 
         /// <summary>
@@ -188,13 +188,11 @@ namespace BzReader
 
                         if (UrlRequested != null)
                         {
-                            Uri uri = new Uri(new Uri(GenerateUrl(String.Empty)), url);
-
-                            UrlRequestedEventArgs urea = new UrlRequestedEventArgs(HttpUtility.UrlDecode(uri.AbsolutePath.Substring(1)));
+                            UrlRequestedEventArgs urea = new UrlRequestedEventArgs(url, port);
 
                             UrlRequested(this, urea);
 
-                            redirectUrl = urea.Redirect ? urea.RedirectTarget : String.Empty;
+                            redirectUrl = urea.Redirect ? urea.RedirectUrl : String.Empty;
                             response = urea.Redirect ? "302 Moved" : urea.Response;
                         }
 

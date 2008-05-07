@@ -38,13 +38,17 @@ namespace BzReader
         /// The ID of the Wiki topic
         /// </summary>
         public readonly long TopicId;
+        /// <summary>
+        /// The score of the hit
+        /// </summary>
+        public readonly float Score;
 
         /// <summary>
         /// Whether this topic is being redirected to a different one
         /// </summary>
         public string RedirectToTopic
         {
-            get { return redirectToTopic;}
+            get { return redirectToTopic; }
         }
 
         /// <summary>
@@ -71,6 +75,8 @@ namespace BzReader
         public PageInfo(Indexer ixr, Hit hit)
         {
             Indexer = ixr;
+
+            Score = hit.GetScore();
 
             Document doc = hit.GetDocument();
 

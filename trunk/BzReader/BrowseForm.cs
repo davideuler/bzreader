@@ -199,23 +199,55 @@ namespace BzReader
 
             PageInfo page = hitsBox.SelectedItem as PageInfo;
 
-            if (page == null ||
-                !e.Url.Equals(page.Name, StringComparison.InvariantCultureIgnoreCase))
-            {
-                HitCollection hits = Indexer.Search(e.Url, indexes.Values, 1);
-
-                page = null;
-
-                if (hits.Count > 0)
-                {
-                    page = hits[0];
-                }
-            }
-
-            if (page != null)
+            if (page != null &&
+                e.TopicName.Equals(page.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                e.IndexName.Equals(page.Indexer.File, StringComparison.InvariantCultureIgnoreCase))
             {
                 response = page.GetFormattedContent();
                 redirect = page.RedirectToTopic;
+            }
+            else
+            {
+                List<Indexer> searchArea = new List<Indexer>();
+
+                // This is an internal link
+
+                if (String.IsNullOrEmpty(e.IndexName))
+                {
+                    if (page != null)
+                    {
+                        searchArea.Add(page.Indexer);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No selected page and IndexName is null");
+
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach (Indexer ixr in indexes.Values)
+                    {
+                        if (ixr.File.Equals(e.IndexName, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            searchArea.Add(ixr);
+
+                            break;
+                        }
+                    }
+                }
+
+                if (searchArea.Count > 0)
+                {
+                    HitCollection hits = Indexer.Search(e.TopicName, searchArea, 1);
+
+                    if (hits.Count > 0)
+                    {
+                        response = hits[0].GetFormattedContent();
+                        redirect = hits[0].RedirectToTopic;
+                    }
+                }
             }
 
             e.Redirect = !String.IsNullOrEmpty(redirect);
@@ -235,7 +267,7 @@ namespace BzReader
             if (page != null &&
                 !loadingResults)
             {
-                webBrowser.Navigate(WebServer.Instance.GenerateUrl(page.Name));
+                webBrowser.Navigate(WebServer.Instance.GenerateUrl(page));
             }
         }
 
@@ -286,9 +318,9 @@ namespace BzReader
 
             StringCollection sc = new StringCollection();
 
-            foreach (string file in indexes.Keys)
+            foreach (Indexer ixr in indexes.Values)
             {
-                sc.Add(file.ToLowerInvariant());
+                sc.Add(ixr.File);
             }
 
             Properties.Settings.Default.Dumps = sc;
@@ -343,7 +375,7 @@ namespace BzReader
                 }
             }
 
-            indexes.Add(file.ToLowerInvariant(), ixr);
+            indexes.Add(ixr.File, ixr);
         }
 
         private void SyncCloseMenuItem()
@@ -357,9 +389,9 @@ namespace BzReader
 
             SortedDictionary<string, string> sd = new SortedDictionary<string,string>();
 
-            foreach (string file in indexes.Keys)
+            foreach (Indexer ixr in indexes.Values)
             {
-                sd.Add(Path.GetFileNameWithoutExtension(file), file);
+                sd.Add(Path.GetFileNameWithoutExtension(ixr.File), ixr.File);
             }
 
             foreach (string file in sd.Keys)
