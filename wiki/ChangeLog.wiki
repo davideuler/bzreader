@@ -1,0 +1,14 @@
+#summary The history of changes between the versions of BzReader.
+#labels Featured
+
+==1.0.2==
+
+  * Added the possibility to navigate Back and Forward between the topics
+  * Fixed a bug in viewing the search results when the selected hit was not from the language the user selected.
+  
+
+==1.0.1==
+
+  * Microsoft .NET Framework prerequisite condition added to the installation package.
+  * Background searches
+  * Automatic searches will not trigger error dialogs anymore. You will need to explicitly start a search by pressing Enter to see the error message, if there is any. 
