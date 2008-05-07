@@ -21,7 +21,7 @@ namespace BzReader
         /// <summary>
         /// The indexer this hit belongs to
         /// </summary>
-        private Indexer indexer;
+        public readonly Indexer Indexer;
         /// <summary>
         /// The title of the topic
         /// </summary>
@@ -70,7 +70,7 @@ namespace BzReader
         /// <param name="hit">The Lucene Hit object</param>
         public PageInfo(Indexer ixr, Hit hit)
         {
-            indexer = ixr;
+            Indexer = ixr;
 
             Document doc = hit.GetDocument();
 
@@ -110,7 +110,7 @@ namespace BzReader
                 return formattedContent;
             }
 
-            string raw = indexer.LoadAndDecodeBlock(Beginnings, Ends);
+            string raw = Indexer.LoadAndDecodeBlock(Beginnings, Ends);
 
             string searchfor = String.Format("<id>{0}</id>", TopicId);
 
