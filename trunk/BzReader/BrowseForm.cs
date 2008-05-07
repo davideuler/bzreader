@@ -48,8 +48,14 @@ namespace BzReader
 
             WebServer.Instance.UrlRequested += new UrlRequestedHandler(WebServer_UrlRequested);
             webBrowser.DocumentTitleChanged += new EventHandler(webBrowser_DocumentTitleChanged);
+            webBrowser.CanGoBackChanged += new EventHandler(webBrowser_CanGoBackChanged);
+            webBrowser.CanGoForwardChanged += new EventHandler(webBrowser_CanGoForwardChanged);
+            
+            searchBox.TextBox.PreviewKeyDown += new PreviewKeyDownEventHandler(searchBox_PreviewKeyDown);
 
             SyncCloseMenuItem();
+
+            searchBox.Width = hitsBox.Width;
         }
 
         /// <summary>
@@ -402,6 +408,36 @@ namespace BzReader
         private void WebServer_UrlRequested(object sender, UrlRequestedEventArgs e)
         {
             Invoke(new UrlRequestedHandler(Web_UrlRequested), sender, e);
+        }
+
+        private void goButton_Click(object sender, EventArgs e)
+        {
+            LaunchSearch(true);
+        }
+
+        private void webBrowser_CanGoForwardChanged(object sender, EventArgs e)
+        {
+            nextButton.Enabled = webBrowser.CanGoForward;
+        }
+
+        private void webBrowser_CanGoBackChanged(object sender, EventArgs e)
+        {
+            backButton.Enabled = webBrowser.CanGoBack;
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            webBrowser.GoForward();
+        }
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            webBrowser.GoBack();
+        }
+
+        private void hitsBox_SizeChanged(object sender, EventArgs e)
+        {
+            searchBox.Width = hitsBox.Width;
         }
 
         #endregion
