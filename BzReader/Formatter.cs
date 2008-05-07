@@ -855,7 +855,7 @@ namespace ScrewTurn.Wiki
 				if(n.Length > 0) sb.Append(n);
 				else sb.Append(a);
 				sb.Append("</a>");
-			}
+			}/*
 			else if(((a.IndexOf(".") != -1 && !a.ToLowerInvariant().EndsWith(".aspx")) || a.EndsWith("/"))) {
 				// Link to an internal file or subdirectory
 				sb.Append(@"<a");
@@ -871,7 +871,7 @@ namespace ScrewTurn.Wiki
 				if(n.Length > 0) sb.Append(n);
 				else sb.Append(a);
 				sb.Append("</a>");
-			}
+			}*/
 			else {/*
 				if(a.IndexOf(".aspx") != -1) {
 					// The link points to a "system" page

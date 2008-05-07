@@ -764,6 +764,8 @@ namespace BzReader
             si.MaxResults = maxResults;
             si.Errors = new Queue<Exception>();
 
+            int indexersNumber = 0;
+
             // I can't really be sure about the thread safety of Lucene
 
             try
@@ -772,6 +774,8 @@ namespace BzReader
                 {
                     foreach (Indexer ixr in indexers)
                     {
+                        indexersNumber++;
+
                         int i = 0;
 
                         while (ixr.searchRunning &&
@@ -845,6 +849,29 @@ namespace BzReader
             }
 
             ret.ErrorMessages = sb.Length > 0 ? sb.ToString() : String.Empty;
+
+            if (indexersNumber > 1)
+            {
+                PageInfo[] arr = new PageInfo[ret.Count];
+
+                for (int i = 0; i < ret.Count; i++)
+                {
+                    arr[i] = ret[i];
+                }
+
+                Array.Sort<PageInfo>(arr,
+                    delegate(PageInfo a, PageInfo b)
+                    {
+                        return (a.Score < b.Score ? 1 : (a.Score > b.Score ? -1 : 0));
+                    });
+
+                ret.Clear();
+
+                foreach (PageInfo pi in arr)
+                {
+                    ret.Add(pi);
+                }
+            }
 
             return ret;
         }
@@ -1012,6 +1039,14 @@ namespace BzReader
             }
 
             return ret;
+        }
+
+        /// <summary>
+        /// The name of the dump file this index is associated
+        /// </summary>
+        public string File
+        {
+            get { return filePath.ToLowerInvariant(); }
         }
 
         #endregion
