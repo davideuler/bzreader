@@ -3,7 +3,7 @@
 
 ==1.0.3==
 
-  * Fixed an annoying bug in indexing code which would manifest itself when viewing the topic which was split between the bz2 blocks. The BzReader would not show such a topic.
+  * Fixed an annoying bug in indexing code which would manifest itself when viewing the topic which was split between the bz2 blocks. The BzReader would not show such a topic. *Please, re-create your fulltext index by deleting the [DumpName].idx folder.*
 
 ==1.0.2==
 
