@@ -420,7 +420,7 @@ namespace BzReader
                             ends = new long[2];
 
                             begins[1] = previousBlockBeginning;
-                            begins[1] = previousBlockEnd;
+                            ends[1] = previousBlockEnd;
                         }
                         else
                         {
