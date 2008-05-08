@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.3==
+
+  * Fixed an annoying bug in indexing code which would manifest itself when viewing the topic which was split between the bz2 blocks. The BzReader would not show such a topic.
+
 ==1.0.2==
 
   * Added the possibility to navigate Back and Forward between the topics
