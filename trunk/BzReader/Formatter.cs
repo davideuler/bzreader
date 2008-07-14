@@ -266,10 +266,10 @@ namespace ScrewTurn.Wiki
 			// Links and images
 			match = link.Match(sb.ToString());
 			while(match.Success) {
-				if(IsNoWikied(match.Index, noWikiBegin, noWikiEnd, out end)) {
+				/*if(IsNoWikied(match.Index, noWikiBegin, noWikiEnd, out end)) {
 					match = link.Match(sb.ToString(), end);
 					continue;
-				}
+				}*/
 				if(match.Value.Equals("[]") || match.Value.Equals("[[]]")) continue; // Prevents formatting emtpy links
 				done = false;
 				if(match.Value.StartsWith("[[")) tmp = match.Value.Substring(2, match.Length - 4).Trim();
@@ -399,7 +399,15 @@ namespace ScrewTurn.Wiki
 					n = "";
 				}
 				if(!done) {
-					sb.Insert(match.Index, BuildLink(a, n, false, "", lp));
+                    
+                    string linkText = BuildLink(a, n, false, "", lp);
+
+                    if (a.IndexOfAny("<>".ToCharArray()) != -1)
+                    {
+                        end = match.Index + linkText.Length;
+                    }
+
+					sb.Insert(match.Index, linkText);
 				}
 				ComputeNoWiki(sb.ToString(), ref noWikiBegin, ref noWikiEnd);
 				match = link.Match(sb.ToString(), end);
