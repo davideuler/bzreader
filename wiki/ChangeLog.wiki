@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.4==
+
+  * Fixed a bug in formatting code which would prevent the generation of the HTML on an article with invalid markup (eg. Jan Garbarek in English Wikipedia).
+
 ==1.0.3==
 
   * Fixed an annoying bug in indexing code which would manifest itself when viewing the topic which was split between the bz2 blocks. The BzReader would not show such a topic. *Please, re-create your fulltext index by deleting the [DumpName].idx folder.*
