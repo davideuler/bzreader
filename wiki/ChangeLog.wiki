@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.5==
+
+  * Two small fixes in the formatting code.
+
 ==1.0.4==
 
   * Fixed a bug in formatting code which would prevent the generation of the HTML on an article with invalid markup (eg. Jan Garbarek in English Wikipedia).
