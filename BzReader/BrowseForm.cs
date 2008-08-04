@@ -240,12 +240,17 @@ namespace BzReader
 
                 if (searchArea.Count > 0)
                 {
-                    HitCollection hits = Indexer.Search(e.TopicName, searchArea, 1);
+                    HitCollection hits = Indexer.Search(e.TopicName, searchArea, 100);
 
-                    if (hits.Count > 0)
+                    foreach (PageInfo pi in hits)
                     {
-                        response = hits[0].GetFormattedContent();
-                        redirect = hits[0].RedirectToTopic;
+                        if (pi.Name.Equals(e.TopicName, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            response = pi.GetFormattedContent();
+                            redirect = pi.RedirectToTopic;
+
+                            break;
+                        }
                     }
                 }
             }
