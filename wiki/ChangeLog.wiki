@@ -1,6 +1,11 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.6==
+
+  * Windows x64 fix. BzReader should now correctly run as a 32-bit application in 64-bit Windows.
+  * A fix for the bug in the searching code which would show up as BzReader not showing some topics (i.e. Hong Kong in English Wikipedia).
+
 ==1.0.5==
 
   * Two small fixes in the formatting code.
