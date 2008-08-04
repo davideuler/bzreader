@@ -272,8 +272,7 @@ namespace ScrewTurn.Wiki
 				}*/
 				if(match.Value.Equals("[]") || match.Value.Equals("[[]]")) continue; // Prevents formatting emtpy links
 				done = false;
-				if(match.Value.StartsWith("[[")) tmp = match.Value.Substring(2, match.Length - 4).Trim();
-				else tmp = match.Value.Substring(1, match.Length - 2).Trim();
+                tmp = match.Value.Trim('[', ']').Trim();
 				sb.Remove(match.Index, match.Length);
 				a = "";
 				n = "";
@@ -1079,7 +1078,8 @@ namespace ScrewTurn.Wiki
 					currLine++;
 				}
 				else {
-					sb.Remove(sb.Length - 5, 5);
+                    if (sb.Length >= 5)
+					    sb.Remove(sb.Length - 5, 5);
 					sb.Append(GenerateList(lines, currLine, level + 1, ref currLine));
 					sb.Append("</li>");
 				}

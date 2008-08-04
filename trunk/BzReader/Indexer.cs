@@ -753,7 +753,7 @@ namespace BzReader
                 }
             }
 
-            string searchRequest = String.Format("title:{0} AND -\"Image:\"", term);
+            string searchRequest = String.Format("title:\"{0}\" AND -\"Image:\"", term);
 
             HitCollection ret = new HitCollection();
 
