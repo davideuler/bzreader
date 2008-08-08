@@ -188,6 +188,12 @@ namespace BzReader
         }
 
         /// <summary>
+        /// The stack of the automatic redirects. Contains the list of automatic redirects which happened
+        /// for current request. Needed to avoid the loops in redirects.
+        /// </summary>
+        private Stack<string> autoRedirects = new Stack<string>();
+
+        /// <summary>
         /// Gets called whenever the browser control requests a URL from the web server
         /// </summary>
         /// <param name="sender">Web server instance</param>
@@ -197,11 +203,19 @@ namespace BzReader
             string response = "Not found";
             string redirect = String.Empty;
 
+            string topic = e.TopicName.Replace('_', ' ').Trim();
+
+            if (topic.Contains("#"))
+            {
+                topic = topic.Substring(0, topic.IndexOf('#')).Trim();
+            }
+
             PageInfo page = hitsBox.SelectedItem as PageInfo;
 
             if (page != null &&
-                e.TopicName.Equals(page.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                e.IndexName.Equals(page.Indexer.File, StringComparison.InvariantCultureIgnoreCase))
+                topic.Equals(page.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                e.IndexName.Equals(page.Indexer.File, StringComparison.InvariantCultureIgnoreCase) &&
+                !IsCircularRedirect(page))
             {
                 response = page.GetFormattedContent();
                 redirect = page.RedirectToTopic;
@@ -220,9 +234,10 @@ namespace BzReader
                     }
                     else
                     {
-                        MessageBox.Show("No selected page and IndexName is null");
-
-                        return;
+                        foreach (Indexer ixr in indexes.Values)
+                        {
+                            searchArea.Add(ixr);
+                        }
                     }
                 }
                 else
@@ -240,16 +255,52 @@ namespace BzReader
 
                 if (searchArea.Count > 0)
                 {
-                    HitCollection hits = Indexer.Search(e.TopicName, searchArea, 100);
+                    HitCollection hits = Indexer.Search(topic, searchArea, 100);
+
+                    bool exactTopicLocated = false;
 
                     foreach (PageInfo pi in hits)
                     {
-                        if (pi.Name.Equals(e.TopicName, StringComparison.InvariantCultureIgnoreCase))
+                        if (pi.Name.Trim().Equals(topic, StringComparison.InvariantCultureIgnoreCase) &&
+                            !IsCircularRedirect(pi))
                         {
                             response = pi.GetFormattedContent();
                             redirect = pi.RedirectToTopic;
 
+                            exactTopicLocated = true;
+
                             break;
+                        }
+                    }
+
+                    if (hits.Count > 0 &&
+                        !exactTopicLocated)
+                    {
+                        foreach (PageInfo pi in hits)
+                        {
+                            if (String.IsNullOrEmpty(pi.RedirectToTopic))
+                            {
+                                response = pi.GetFormattedContent();
+                                redirect = pi.RedirectToTopic;
+
+                                exactTopicLocated = true;
+
+                                break;
+                            }
+                        }
+
+                        if (!exactTopicLocated)
+                        {
+                            foreach (PageInfo pi in hits)
+                            {
+                                if (!IsCircularRedirect(pi))
+                                {
+                                    response = pi.GetFormattedContent();
+                                    redirect = pi.RedirectToTopic;
+
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -258,6 +309,40 @@ namespace BzReader
             e.Redirect = !String.IsNullOrEmpty(redirect);
             e.RedirectTarget = redirect;
             e.Response = response;
+
+            if (String.IsNullOrEmpty(redirect))
+            {
+                autoRedirects.Clear();
+            }
+            else
+            {
+                autoRedirects.Push(redirect);
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the specified page would be a circular redirect
+        /// </summary>
+        /// <param name="pi">Page to check for circular redirect</param>
+        /// <returns>True if the page has already been encountered in the list of redirects</returns>
+        private bool IsCircularRedirect(PageInfo pi)
+        {
+            // We need to generate the formatted content to know whether the topic is redirected
+
+            pi.GetFormattedContent();
+
+            if (!String.IsNullOrEmpty(pi.RedirectToTopic))
+            {
+                foreach (string s in autoRedirects)
+                {
+                    if (s.Equals(pi.RedirectToTopic, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
