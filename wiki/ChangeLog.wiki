@@ -1,7 +1,7 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
-==v1.0.7==
+==1.0.7==
 
   * Added protection against the circular redirects in articles (was happening eg. in Industrial Revolution article in English Wikipedia). There should be no more "Unable to navigate to page" errors from IE ActiveX control.
 
