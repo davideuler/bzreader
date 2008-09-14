@@ -1,4 +1,5 @@
 #summary An overview of the query syntax supported by BzReader.
+#labels Featured
 = Introduction =
 
 BzReader is using an excellent [http://incubator.apache.org/lucene.net/ Lucene.Net] library for searching and indexing the Wikipedia dumps. You may consult the [http://lucene.apache.org/java/docs/queryparsersyntax.html query syntax] on the Lucene project page. There's also a short summary of if here.
