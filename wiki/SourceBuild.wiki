@@ -1,0 +1,21 @@
+#summary Mini HowTo on how to build the BzReader from sources.
+#labels Featured
+
+= Introduction =
+
+How to build BzReader in 11 steps with free tools only.
+
+  # Download TortoiseSvn from http://tortoisesvn.net/downloads
+  # Create a folder BzReader
+  # Right click in this empty folder and select "SVN Checkout"
+  # Fill "http://bzreader.googlecode.com/svn/trunk/" in the first textbox, leave the second textbox as is and press OK. It should download the latest version
+  # Go to http://www.microsoft.com/express/2005/download/default.aspx and download and install Visual C++ 2005  Express and Visual C# 2005 Express
+  # Go to http://www.microsoft.com/downloads/details.aspx?FamilyID=51A5C65B-C020-4E08-8AC0-3EB9C06996F4&displaylang=en to download and install Visual Studio 2005 SDK Version 4.0
+  # Open BzReader.sln in Visual C++ Express
+  # Select Tools -> Options -> Projects and Solutions -> VC++ Directories and add these paths:
+    * Executable files: C:\Program Files\Microsoft Platform SDK\Bin
+    * Include files: C:\Program Files\Microsoft Platform SDK\include
+    * Library files: C:\Program Files\Microsoft Platform SDK\lib
+  # Build the bzip2 library
+  # Close the Visual C++ Express and open the solution file again, but now in Visual C# Express
+  # Build it and feel free to modify it and send patches :) 
