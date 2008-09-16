@@ -118,6 +118,15 @@ namespace BzReader
                 {
                     searchStatusLabel.Text = "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results";
                 }
+
+                if (hits.Count > 0)
+                {
+                    hitsBox.SetSelected(0, true);
+
+                    PageInfo page = hitsBox.SelectedItem as PageInfo;
+
+                    webBrowser.Navigate(WebServer.Instance.GenerateUrl(page));
+                }
             }
             else
             {
