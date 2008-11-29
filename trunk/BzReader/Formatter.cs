@@ -57,8 +57,9 @@ namespace ScrewTurn.Wiki
         /// <param name="documentName">The name of the document</param>
 		/// <param name="raw">The raw WikiMarkup text.</param>
 		/// <param name="current">The current Page (can be null).</param>
+        /// <param name="is_rtl">Should the XHTML output have right-to-left text flow (e.g. for Hebrew)</param>
 		/// <returns>The formatted text.</returns>
-		public static string Format(string documentName, string raw, PageInfo current, out string redirectToTopic) {
+		public static string Format(string documentName, string raw, PageInfo current, bool is_rtl, out string redirectToTopic) {
 
 			List<PageInfo> lp = new List<PageInfo>();
 
@@ -685,7 +686,7 @@ namespace ScrewTurn.Wiki
 				sb.Append("</div>");
 			}
 
-            sb.Insert(0, "<html><header><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/><title>" + HttpUtility.HtmlEncode(documentName) + "</title></head><body>");
+            sb.Insert(0, "<html><header><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/><title>" + HttpUtility.HtmlEncode(documentName) + "</title></head><body" + (Settings.IsRTL ? " dir=\"rtl\" align=\"right\">" : ">"));
             sb.Append("</body></html>");
 
 			return sb.ToString();

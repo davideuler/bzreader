@@ -400,7 +400,15 @@ namespace BzReader
                 Text = "BzReader - " + webBrowser.DocumentTitle;
             }
         }
-
+        
+        private void rtlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
+            
+            Settings.IsRTL = Settings.IsRTL ? false : true; // toggle the RTL flow
+            tsi.Checked = Settings.IsRTL; 
+        }
+        
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog(this);
