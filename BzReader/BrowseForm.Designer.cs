@@ -43,6 +43,9 @@ namespace BzReader
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rtlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            
             this.hitsBox = new System.Windows.Forms.ListBox();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -73,6 +76,7 @@ namespace BzReader
             // 
             menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.optionsToolStripMenuItem,
             this.helpToolStripMenuItem});
             menuStrip.Location = new System.Drawing.Point(0, 0);
             menuStrip.Name = "menuStrip";
@@ -115,6 +119,24 @@ namespace BzReader
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            //
+            // optionsToolStripMenuItem
+            //
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.rtlToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.optionsToolStripMenuItem.Text = "&Options";
+            //
+            // rtlToolStripMenuItem
+            //
+            this.rtlToolStripMenuItem.Name = "rtlToolStripMenuItem";
+            this.rtlToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.rtlToolStripMenuItem.Text = "&Right-to-left text flow";
+            this.rtlToolStripMenuItem.Checked = false;
+            //this.rtlToolStripMenuItem.CheckOnClick = true;
+            this.rtlToolStripMenuItem.Click += new System.EventHandler(this.rtlToolStripMenuItem_Click);
+
             // 
             // helpToolStripMenuItem
             // 
@@ -324,6 +346,8 @@ namespace BzReader
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rtlToolStripMenuItem;
         private System.Windows.Forms.ListBox hitsBox;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.ToolStripStatusLabel searchStatusLabel;

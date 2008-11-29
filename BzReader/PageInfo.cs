@@ -150,7 +150,7 @@ namespace BzReader
 
             string toFormat = raw.Substring(extractionStart + 1, extractionEnd - extractionStart - 1);
 
-            formattedContent = Formatter.Format(Name, HttpUtility.HtmlDecode(toFormat), this, out redirectToTopic);
+            formattedContent = Formatter.Format(Name, HttpUtility.HtmlDecode(toFormat), this, Settings.IsRTL, out redirectToTopic);
 
             return formattedContent;
         }
