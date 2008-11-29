@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.8==
+
+  * Added support of the right-to-left languages via the menu option (thanks to Asaf Bartov).
+
 ==1.0.7==
 
   * Added protection against the circular redirects in articles (was happening eg. in Industrial Revolution article in English Wikipedia). There should be no more "Unable to navigate to page" errors from IE ActiveX control.
