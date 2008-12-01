@@ -820,6 +820,13 @@ namespace ScrewTurn.Wiki
 			}
 			else if(a.StartsWith("http://") || a.StartsWith("https://") || a.StartsWith("ftp://") || a.StartsWith("file://")) {
 				// The link is complete
+                // correctly handle external link descriptions (i.e. [http://www.moose.com Best Moose Site])
+                int pos = a.IndexOf(" ");
+                if (pos != -1) {
+                   // Link with title
+                   n = a.Substring(pos+1);
+                   a = a.Substring(0, pos+1);
+                }
 				sb.Append(@"<a");
 				if(!isImage) sb.Append(@" class=""externallink""");
 				sb.Append(@" href=""");
