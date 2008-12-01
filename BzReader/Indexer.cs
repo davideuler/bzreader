@@ -277,7 +277,7 @@ namespace BzReader
 
                 while (activeThreads != 0)
                 {
-                    ReportProgress(0, IndexingProgress.State.Running, "Waiting for tokenizer threads to finish");
+                    ReportProgress(0, IndexingProgress.State.Running, "Waiting for " +activeThreads.ToString() + " tokenizer threads to finish");
 
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
