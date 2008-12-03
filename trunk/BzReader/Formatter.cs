@@ -957,6 +957,7 @@ namespace ScrewTurn.Wiki
 							if(!isImage) sb.Append(@" class=""pagelink""");
 							if(blank) sb.Append(@" target=""_blank""");
 							sb.Append(@" href=""");
+                            a = a.Replace("\"", "&quot;");
 							sb.Append(a);
 							sb.Append(@""" title=""");
 							if(!isImage && n.Length > 0) sb.Append(nstripped);
