@@ -86,9 +86,21 @@ namespace BzReader
         /// </summary>
         private Thread indexingThread;
         /// <summary>
+        /// The bzip2-watching thread
+        /// </summary>
+        private Thread bzip2WatchThread;
+        /// <summary>
         /// Whether the indexing process should be aborted
         /// </summary>
         private bool abortIndexing;
+        /// <summary>
+        /// Percent done for bzip2 block location progress
+        /// </summary>
+        private int bz2_blocks_pct_done;
+        /// <summary>
+        /// Total bz2 file size, for progress calculation
+        /// </summary>
+        private long bz2_filesize;
         /// <summary>
         /// The cache of decoded blocks from file
         /// </summary>
@@ -105,6 +117,14 @@ namespace BzReader
         /// Whether to use multiple threads while indexing the documents
         /// </summary>
         private bool multithreadedIndexing = false;
+        /// <summary>
+        /// start time for operations
+        /// </summary>
+        private DateTime startTime;
+        /// <summary>
+        /// elapsed time for operations
+        /// </summary>
+        private TimeSpan elapsed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Indexer"/> class.
@@ -159,11 +179,24 @@ namespace BzReader
         private IndexWriter memoryIndexer;
 
         /// <summary>
+        ///  watch the bzip2 block locator and report progress
+        /// </summary>
+        private void BzipBlockLocatorProgressMonitor()
+        {
+            while (true) // we expect to be aborted externally
+            {
+                Thread.Sleep(500);
+                ReportProgress(bz2_blocks_pct_done, IndexingProgress.State.Running, String.Empty);
+            }
+        }
+
+        /// <summary>
         /// Creates the index for the bz2 file on a separate thread.
         /// </summary>
         private void CreateIndexAsync()
         {
             bool failed = false;
+            startTime = DateTime.Now;
 
             try
             {
@@ -214,8 +247,9 @@ namespace BzReader
 
                 // Starting indexing
 
+                startTime = DateTime.Now;
+                elapsed = new TimeSpan(0);
                 ReportProgress(0, IndexingProgress.State.Running, "Indexing");
-
                 for (long i = 0; i < totalBlocks && !abortIndexing; i++)
                 {
                     ReportProgress((int)((double)(i * 100) / (double)totalBlocks), IndexingProgress.State.Running, String.Empty);
@@ -274,14 +308,12 @@ namespace BzReader
                 }
 
                 // Wait till all the threads finish
-
                 while (activeThreads != 0)
                 {
                     ReportProgress(0, IndexingProgress.State.Running, "Waiting for " +activeThreads.ToString() + " tokenizer threads to finish");
 
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
-
                 ReportProgress(0, IndexingProgress.State.Running, "Flushing documents to disk");
 
                 Lucene.Net.Store.Directory dir = memoryIndexer.GetDirectory();
@@ -291,7 +323,6 @@ namespace BzReader
                 indexer.AddIndexes(new Lucene.Net.Store.Directory[] { dir });
 
                 memoryIndexer = null;
-
                 ReportProgress(0, IndexingProgress.State.Running, "Optimizing index");
 
                 indexer.Optimize();
@@ -328,7 +359,6 @@ namespace BzReader
                     searcher = new IndexSearcher(indexPath);
                 }
             }
-
             ReportProgress(0, IndexingProgress.State.Finished, String.Empty);
         }
 
@@ -634,8 +664,15 @@ namespace BzReader
         private void LocateBlocks()
         {
             ReportProgress(0, IndexingProgress.State.Running, "Locating the blocks");
+            FileInfo fi = new FileInfo(filePath);
+            bz2_filesize = fi.Length;
+            startTime = DateTime.Now;
+            elapsed = new TimeSpan(0); 
+            bzip2WatchThread = new Thread(BzipBlockLocatorProgressMonitor);
+            bzip2WatchThread.Start(); // start the monitor, to report progress
 
-            bzip2.StatusCode status = bzip2.BZ2_bzLocateBlocks(filePath, beginnings, ends, ref totalBlocks);
+            bzip2.StatusCode status = bzip2.BZ2_bzLocateBlocks(filePath, beginnings, ends, ref totalBlocks, ref bz2_blocks_pct_done);
+            bzip2WatchThread.Abort();
 
             if (status != bzip2.StatusCode.BZ_OK)
             {
@@ -888,7 +925,7 @@ namespace BzReader
             {
                 Query q = queryParser.Parse(si.SearchRequest);
 
-                IEnumerator hits = searcher.Search(q).GetEnumerator();
+                IEnumerator hits = searcher.Search(q).Iterator();
 
                 int i = 0;
 
@@ -947,11 +984,27 @@ namespace BzReader
 
         private void ReportProgress(int percentage, IndexingProgress.State status, string message)
         {
+            int eta;
             IndexingProgress ip = new IndexingProgress();
 
             ip.IndexingState = status;
             ip.Message = message;
 
+            // a naive ETA formula: ETA = ElapsedMinutes * 100 / percentDone - Elapsed
+            if (percentage > 0)
+            {
+                elapsed = (DateTime.Now.Subtract(startTime));
+                eta = (int)(elapsed.TotalMinutes * 100 / percentage - elapsed.TotalMinutes);       
+                if (eta == 0)
+                    ip.ETA = "in a jiffy!";
+                else 
+                {
+                    TimeSpan remaining = TimeSpan.FromMinutes(eta+1);
+                    ip.ETA = "~ " + (int)remaining.TotalHours + " hours and " + remaining.Minutes +" minutes";
+                }
+            }
+            else ip.ETA = "n/a";
+            
             OnProgressChanged(new ProgressChangedEventArgs(percentage, ip));
         }
 

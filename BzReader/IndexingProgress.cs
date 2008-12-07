@@ -36,5 +36,9 @@ namespace BzReader
         /// The error message, if any
         /// </summary>
         public string Message;
+        /// <summary>
+        /// Estimated time of index completion (ETA)
+        /// </summary>
+        public string ETA;
     }
 }

@@ -68,6 +68,10 @@ namespace BzReader
             {
                 textBox.AppendText(ip.Message + Environment.NewLine);
             }
+            if (!String.IsNullOrEmpty(ip.ETA))
+            {
+                labelETA.Text = "ETA: "+ip.ETA;
+            }
 
             if (e.ProgressPercentage > 0)
             {
@@ -82,7 +86,7 @@ namespace BzReader
             if (ip.IndexingState == IndexingProgress.State.Finished)
             {
                 indexingRunning = false;
-                
+                labelETA.Text = "All done!";
                 if (!btnDone.Enabled)
                 {
                     // Due to abort
