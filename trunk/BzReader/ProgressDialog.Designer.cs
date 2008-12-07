@@ -31,6 +31,7 @@ namespace BzReader
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.textBox = new System.Windows.Forms.TextBox();
             this.btnDone = new System.Windows.Forms.Button();
+            this.labelETA = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBar
@@ -43,7 +44,7 @@ namespace BzReader
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(12, 42);
+            this.textBox.Location = new System.Drawing.Point(12, 64);
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.ReadOnly = true;
@@ -53,7 +54,7 @@ namespace BzReader
             // 
             // btnDone
             // 
-            this.btnDone.Location = new System.Drawing.Point(89, 113);
+            this.btnDone.Location = new System.Drawing.Point(89, 135);
             this.btnDone.Name = "btnDone";
             this.btnDone.Size = new System.Drawing.Size(75, 23);
             this.btnDone.TabIndex = 2;
@@ -61,12 +62,22 @@ namespace BzReader
             this.btnDone.UseVisualStyleBackColor = true;
             this.btnDone.Click += new System.EventHandler(this.btnDone_Click);
             // 
+            // labelETA
+            // 
+            this.labelETA.AutoSize = true;
+            this.labelETA.Location = new System.Drawing.Point(19, 42);
+            this.labelETA.Name = "labelETA";
+            this.labelETA.Size = new System.Drawing.Size(43, 13);
+            this.labelETA.TabIndex = 3;
+            this.labelETA.Text = "ETA: ...";
+            // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(254, 144);
+            this.ClientSize = new System.Drawing.Size(254, 170);
             this.ControlBox = false;
+            this.Controls.Add(this.labelETA);
             this.Controls.Add(this.btnDone);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.progressBar);
@@ -88,5 +99,6 @@ namespace BzReader
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.TextBox textBox;
         private System.Windows.Forms.Button btnDone;
+        private System.Windows.Forms.Label labelETA;
     }
 }
