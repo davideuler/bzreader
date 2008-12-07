@@ -197,12 +197,12 @@ MaybeUInt64 bEnd   [BZ_MAX_HANDLED_BLOCKS];
 MaybeUInt64 rbStart[BZ_MAX_HANDLED_BLOCKS];
 MaybeUInt64 rbEnd  [BZ_MAX_HANDLED_BLOCKS];
 
-
 int BZ_API(BZ2_bzLocateBlocks) ( 
 								const char*	path,
 								long long*	beginnings,
 								long long*	ends,
-								long long*	bufSize
+								long long*	bufSize,
+								int*  blocks_pct_done
 								)
 {
 	Int32       b, currBlock, rbCtr;
@@ -212,13 +212,17 @@ int BZ_API(BZ2_bzLocateBlocks) (
 	UInt32      buffHi, buffLo;
 
 	long long originalBufSize = *bufSize;
+	long long total_bz2_size;
 
 	FILE *inFile = fopen(path, "rb");
-
+	
 	if (inFile == NULL)
 	{
 		return BZ_IO_ERROR;
 	}
+	_fseeki64(inFile, 0, SEEK_END);
+	total_bz2_size = _ftelli64(inFile);
+	_fseeki64(inFile, 0, SEEK_SET);
 
 	bsIn = bsOpenReadStream(inFile);
 
@@ -226,7 +230,7 @@ int BZ_API(BZ2_bzLocateBlocks) (
 	buffHi = buffLo = 0;
 	currBlock = 0;
 	bStart[currBlock] = 0;
-
+	*blocks_pct_done = 0;
 	rbCtr = 0;
 
 	while (True)
@@ -280,7 +284,9 @@ int BZ_API(BZ2_bzLocateBlocks) (
 				}
 
 				currBlock++;
-
+				*blocks_pct_done = (int)((double)_ftelli64(inFile) / (double)total_bz2_size * 100); // report progress
+				
+				
 				bStart[currBlock] = bitsRead;
 		}
 	}

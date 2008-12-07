@@ -169,7 +169,7 @@ public partial class bzip2
     private static extern IntPtr BZ2_bzlibVersion();
 
     [DllImport("bzip2.dll")]
-    private static extern StatusCode BZ2_bzLocateBlocks(string path, IntPtr beginnings, IntPtr ends, ref long bufSize);
+    private static extern StatusCode BZ2_bzLocateBlocks(string path, IntPtr beginnings, IntPtr ends, ref long bufSize, ref int bz2_blocks_pct_done);
 
     [DllImport("bzip2.dll")]
     private static extern StatusCode BZ2_bzLoadBlock(string path, long beginning, long end, IntPtr buf, ref long bufSize);
@@ -211,7 +211,7 @@ public partial class bzip2
         return ret;
     }
 
-    public static StatusCode BZ2_bzLocateBlocks(string path, long[] beginnings, long[] ends, ref long bufSize)
+    public static StatusCode BZ2_bzLocateBlocks(string path, long[] beginnings, long[] ends, ref long bufSize, ref int bz2_blocks_pct_done)
     {
         StatusCode ret;
 
@@ -223,7 +223,7 @@ public partial class bzip2
             ret = BZ2_bzLocateBlocks(path,
                 Marshal.UnsafeAddrOfPinnedArrayElement(beginnings, 0),
                 Marshal.UnsafeAddrOfPinnedArrayElement(ends, 0),
-                ref bufSize);
+                ref bufSize, ref bz2_blocks_pct_done);
         }
         finally
         {

@@ -279,7 +279,8 @@ BZ_EXTERN int BZ_API(BZ2_bzLocateBlocks) (
 		const char*	path,
 		long long*	beginnings,
 		long long*	ends,
-		long long*	bufSize
+		long long*	bufSize,
+		int* blocks_pct_done
 	);
 
 BZ_EXTERN int BZ_API(BZ2_bzLoadBlock) ( 
