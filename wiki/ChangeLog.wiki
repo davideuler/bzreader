@@ -1,6 +1,11 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.9==
+
+  * Fixed a bug in indexing code with the quote character in the article title and incorrect external links. Now you can follow external links just like internal.
+  * Added time estimation in the indexing stage. Both changes are done by Asaf.
+
 ==1.0.8==
 
   * Added support of the right-to-left languages via the menu option (thanks to Asaf Bartov).
