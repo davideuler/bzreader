@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-		<Product Id="32BE5003-DD41-4A84-9F19-0F2E72BFBB80" Name="BzReader" Language="1033" Version="1.0.8.0" Manufacturer="Halleck Software" UpgradeCode="275A7BD6-98EF-4E1F-A2B1-9175AF8327C2">
+		<Product Id="32BE5003-DD41-4A84-9F19-0F2E72BFBB80" Name="BzReader" Language="1033" Version="1.0.9.0" Manufacturer="Halleck Software" UpgradeCode="275A7BD6-98EF-4E1F-A2B1-9175AF8327C2">
 		<Package InstallerVersion="200" Compressed="yes" Platforms="Intel" />
 		<Media Id="1" Cabinet="Setup.cab" EmbedCab="yes" />
 

@@ -995,7 +995,7 @@ namespace BzReader
             {
                 elapsed = (DateTime.Now.Subtract(startTime));
                 eta = (int)(elapsed.TotalMinutes * 100 / percentage - elapsed.TotalMinutes);       
-                if (eta == 0)
+                if (eta <= 0)
                     ip.ETA = "in a jiffy!";
                 else 
                 {
