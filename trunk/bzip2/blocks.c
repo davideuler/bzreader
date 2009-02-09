@@ -284,8 +284,11 @@ int BZ_API(BZ2_bzLocateBlocks) (
 				}
 
 				currBlock++;
-				*blocks_pct_done = (int)((double)_ftelli64(inFile) / (double)total_bz2_size * 100); // report progress
-				
+
+				if (total_bz2_size > 0)
+				{
+					*blocks_pct_done = (int)((double)_ftelli64(inFile) / (double)total_bz2_size * 100); // report progress
+				}
 				
 				bStart[currBlock] = bitsRead;
 		}
