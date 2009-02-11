@@ -83,7 +83,7 @@ namespace BzReader
                 return;
             }
 
-            searchStatusLabel.Text = "Searching for '" + searchBox.Text + "'";
+            searchStatusLabel.Text = String.Format(Properties.Resources.SearchingForTerm, searchBox.Text);
 
             searchLaunched = true;
 
@@ -116,7 +116,7 @@ namespace BzReader
 
                 if (hits.HadMoreHits)
                 {
-                    searchStatusLabel.Text = "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results";
+                    searchStatusLabel.Text = String.Format(Properties.Resources.ShowingXTopResults, Indexer.MAX_SEARCH_HITS.ToString());
                 }
 
                 if (hits.Count > 0)
@@ -130,7 +130,7 @@ namespace BzReader
             }
             else
             {
-                MessageBox.Show(this, hits.ErrorMessages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, hits.ErrorMessages, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -178,7 +178,7 @@ namespace BzReader
 
                 loadingResults = false;
 
-                searchStatusLabel.Text = si.Hits.HadMoreHits ? "Showing " + Indexer.MAX_SEARCH_HITS.ToString() + " top results" : String.Empty;
+                searchStatusLabel.Text = si.Hits.HadMoreHits ? String.Format(Properties.Resources.ShowingXTopResults, Indexer.MAX_SEARCH_HITS.ToString()) : String.Empty;
             }
             else
             {
@@ -397,15 +397,15 @@ namespace BzReader
         {
             if (!String.IsNullOrEmpty(webBrowser.DocumentTitle))
             {
-                Text = "BzReader - " + webBrowser.DocumentTitle;
+                Text = String.Format(Properties.Resources.WindowTitle, webBrowser.DocumentTitle);
             }
         }
         
         private void rtlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem tsi = (ToolStripMenuItem)sender;
-            
-            Settings.IsRTL = Settings.IsRTL ? false : true; // toggle the RTL flow
+
+            Settings.IsRTL = !Settings.IsRTL;
             tsi.Checked = Settings.IsRTL; 
         }
         
@@ -445,7 +445,7 @@ namespace BzReader
             fd.Multiselect = true;
             fd.SupportMultiDottedExtensions = true;
             fd.ValidateNames = true;
-            fd.Filter = "Wikipedia dump files (*.xml.bz2)|*.xml.bz2|All files (*.*)|*.*";
+            fd.Filter = Properties.Resources.OpenDumpFilter;
 
             if (fd.ShowDialog(this) == DialogResult.OK)
             {
@@ -467,7 +467,7 @@ namespace BzReader
         {
             if (!File.Exists(file))
             {
-                MessageBox.Show(this, "Dump file " + file + " does not exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, String.Format(Properties.Resources.DumpFileDoesNotExist, file), Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }

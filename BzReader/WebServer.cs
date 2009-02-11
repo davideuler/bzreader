@@ -165,19 +165,19 @@ namespace BzReader
 
                         if (requestStrings.Length < 2)
                         {
-                            throw new Exception("Too few strings in the HTTP request");
+                            throw new Exception(Properties.Resources.HTTPRequestTooFewStrings);
                         }
 
                         string[] requestParts = requestStrings[0].Split(' ');
 
                         if (requestParts.Length != 3)
                         {
-                            throw new Exception("Invalid number of HTTP request string parts");
+                            throw new Exception(Properties.Resources.HTTPRequestNoStringParts);
                         }
 
                         if (!String.Equals(requestParts[0], "GET"))
                         {
-                            throw new Exception("Unknown HTTP request type " + requestParts[0]);
+                            throw new Exception(String.Format(Properties.Resources.UnknownHTTPRequestType, requestParts[0]));
                         }
 
                         string httpVersion = requestParts[2];

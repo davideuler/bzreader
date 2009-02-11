@@ -30,22 +30,21 @@ namespace BzReader
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.MenuStrip menuStrip;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrowseForm));
             System.Windows.Forms.SplitContainer splitContainer1;
             System.Windows.Forms.StatusStrip statusStrip1;
             System.Windows.Forms.Timer timer;
             System.Windows.Forms.ToolStripContainer toolStripContainer1;
             System.Windows.Forms.ToolStrip toolStrip1;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrowseForm));
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rtlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hitsBox = new System.Windows.Forms.ListBox();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.searchStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -78,11 +77,8 @@ namespace BzReader
             this.fileToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.helpToolStripMenuItem});
-            menuStrip.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(menuStrip, "menuStrip");
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new System.Drawing.Size(562, 24);
-            menuStrip.TabIndex = 0;
-            menuStrip.Text = "menuStrip";
             // 
             // fileToolStripMenuItem
             // 
@@ -92,124 +88,99 @@ namespace BzReader
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
-            this.fileToolStripMenuItem.Text = "&File";
+            resources.ApplyResources(this.fileToolStripMenuItem, "fileToolStripMenuItem");
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.openToolStripMenuItem.Text = "&Open";
+            resources.ApplyResources(this.openToolStripMenuItem, "openToolStripMenuItem");
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.closeToolStripMenuItem.Text = "&Close";
+            resources.ApplyResources(this.closeToolStripMenuItem, "closeToolStripMenuItem");
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(108, 6);
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
+            resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            //
+            // 
             // optionsToolStripMenuItem
-            //
+            // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.rtlToolStripMenuItem});
+            this.rtlToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.optionsToolStripMenuItem.Text = "&Options";
-            //
+            resources.ApplyResources(this.optionsToolStripMenuItem, "optionsToolStripMenuItem");
+            // 
             // rtlToolStripMenuItem
-            //
+            // 
             this.rtlToolStripMenuItem.Name = "rtlToolStripMenuItem";
-            this.rtlToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.rtlToolStripMenuItem.Text = "&Right-to-left text flow";
-            this.rtlToolStripMenuItem.Checked = false;
-            //this.rtlToolStripMenuItem.CheckOnClick = true;
+            resources.ApplyResources(this.rtlToolStripMenuItem, "rtlToolStripMenuItem");
             this.rtlToolStripMenuItem.Click += new System.EventHandler(this.rtlToolStripMenuItem_Click);
-
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.helpToolStripMenuItem.Text = "&Help";
+            resources.ApplyResources(this.helpToolStripMenuItem, "helpToolStripMenuItem");
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.aboutToolStripMenuItem.Text = "&About";
+            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
             splitContainer1.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::BzReader.Properties.Settings.Default, "SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(splitContainer1, "splitContainer1");
             splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            splitContainer1.Location = new System.Drawing.Point(0, 0);
             splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(this.hitsBox);
-            splitContainer1.Panel1MinSize = 130;
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(this.webBrowser);
-            splitContainer1.Size = new System.Drawing.Size(562, 380);
             splitContainer1.SplitterDistance = global::BzReader.Properties.Settings.Default.SplitterDistance;
-            splitContainer1.TabIndex = 1;
             // 
             // hitsBox
             // 
-            this.hitsBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.hitsBox, "hitsBox");
             this.hitsBox.FormattingEnabled = true;
-            this.hitsBox.Location = new System.Drawing.Point(0, 0);
             this.hitsBox.Name = "hitsBox";
-            this.hitsBox.Size = new System.Drawing.Size(130, 368);
-            this.hitsBox.TabIndex = 0;
             this.hitsBox.SizeChanged += new System.EventHandler(this.hitsBox_SizeChanged);
             this.hitsBox.SelectedValueChanged += new System.EventHandler(this.hitsBox_SelectedValueChanged);
             // 
             // webBrowser
             // 
             this.webBrowser.AllowWebBrowserDrop = false;
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.webBrowser, "webBrowser");
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
             this.webBrowser.ScriptErrorsSuppressed = true;
-            this.webBrowser.Size = new System.Drawing.Size(428, 380);
-            this.webBrowser.TabIndex = 0;
             // 
             // statusStrip1
             // 
-            statusStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            resources.ApplyResources(statusStrip1, "statusStrip1");
             statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.searchStatusLabel});
-            statusStrip1.Location = new System.Drawing.Point(0, 0);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new System.Drawing.Size(562, 22);
-            statusStrip1.TabIndex = 2;
-            statusStrip1.Text = "statusStrip";
             // 
             // searchStatusLabel
             // 
             this.searchStatusLabel.Name = "searchStatusLabel";
-            this.searchStatusLabel.Size = new System.Drawing.Size(0, 17);
+            resources.ApplyResources(this.searchStatusLabel, "searchStatusLabel");
             // 
             // timer
             // 
@@ -226,15 +197,11 @@ namespace BzReader
             // toolStripContainer1.ContentPanel
             // 
             toolStripContainer1.ContentPanel.Controls.Add(splitContainer1);
-            toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(562, 380);
-            toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(toolStripContainer1.ContentPanel, "toolStripContainer1.ContentPanel");
+            resources.ApplyResources(toolStripContainer1, "toolStripContainer1");
             toolStripContainer1.LeftToolStripPanelVisible = false;
-            toolStripContainer1.Location = new System.Drawing.Point(0, 24);
             toolStripContainer1.Name = "toolStripContainer1";
             toolStripContainer1.RightToolStripPanelVisible = false;
-            toolStripContainer1.Size = new System.Drawing.Size(562, 427);
-            toolStripContainer1.TabIndex = 3;
-            toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
@@ -242,7 +209,7 @@ namespace BzReader
             // 
             // toolStrip1
             // 
-            toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            resources.ApplyResources(toolStrip1, "toolStrip1");
             toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.searchBox,
@@ -250,70 +217,50 @@ namespace BzReader
             this.toolStripSeparator2,
             this.backButton,
             this.nextButton});
-            toolStrip1.Location = new System.Drawing.Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new System.Drawing.Size(562, 25);
             toolStrip1.Stretch = true;
-            toolStrip1.TabIndex = 1;
-            toolStrip1.Text = "toolStrip1";
             // 
             // searchBox
             // 
-            this.searchBox.AutoSize = false;
+            resources.ApplyResources(this.searchBox, "searchBox");
             this.searchBox.AutoToolTip = true;
             this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(150, 25);
-            this.searchBox.ToolTipText = "Enter your search term here";
             this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
             // goButton
             // 
             this.goButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.goButton.Image = ((System.Drawing.Image)(resources.GetObject("goButton.Image")));
-            this.goButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.goButton, "goButton");
             this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(44, 22);
-            this.goButton.Text = "Search";
             this.goButton.Click += new System.EventHandler(this.goButton_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
             // backButton
             // 
             this.backButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.backButton.Enabled = false;
-            this.backButton.Image = ((System.Drawing.Image)(resources.GetObject("backButton.Image")));
-            this.backButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.backButton, "backButton");
             this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(33, 22);
-            this.backButton.Text = "Back";
             this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
             // nextButton
             // 
             this.nextButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.nextButton.Enabled = false;
-            this.nextButton.Image = ((System.Drawing.Image)(resources.GetObject("nextButton.Image")));
-            this.nextButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.nextButton, "nextButton");
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(51, 22);
-            this.nextButton.Text = "Forward";
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
             // 
             // BrowseForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(562, 451);
             this.Controls.Add(toolStripContainer1);
             this.Controls.Add(menuStrip);
             this.MainMenuStrip = menuStrip;
             this.Name = "BrowseForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "BzReader";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BrowseForm_FormClosing);
             menuStrip.ResumeLayout(false);

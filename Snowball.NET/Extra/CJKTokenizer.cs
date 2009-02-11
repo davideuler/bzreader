@@ -108,8 +108,15 @@ namespace Lucene.Net.Analysis.CJK
 		 */
 		private char[] ioBuffer = new char[IO_BUFFER_SIZE];
 
+        private enum TType
+        {
+            Word,
+            Double,
+            Single
+        }
+
 		/** word type: single=>ASCII  double=>non-ASCII word=>default */
-		private String tokenType = "word";
+		private TType tokenType = TType.Word;
 
 		/**
 		 * tag: previous character is a cached double-byte character  "C1C2C3C4"
@@ -179,7 +186,7 @@ namespace Lucene.Net.Analysis.CJK
 				else 
 				{
 					//get current character
-					c = ioBuffer[bufferIndex++];
+					c = Char.ToLowerInvariant(ioBuffer[bufferIndex++]);
 
 					//get the UnicodeBlock of the current character
 					//ub = Character.UnicodeBlock.of(c);
@@ -209,14 +216,14 @@ namespace Lucene.Net.Analysis.CJK
 							// letter
 							start = offset - 1;
 						} 
-						else if (tokenType == "double") 
+						else if (tokenType == TType.Double) 
 						{
 							// "javaC1C2C3C4linux" <br>
 							//              ^--: the previous non-ASCII
 							// : the current character
 							offset--;
 							bufferIndex--;
-							tokenType = "single";
+							tokenType = TType.Single;
 
 							if (preIsTokened == true) 
 							{
@@ -233,8 +240,9 @@ namespace Lucene.Net.Analysis.CJK
 						}
 
 						// store the LowerCase(c) in the buffer
-						buffer[length++] = Char.ToLower(c);
-						tokenType = "single";
+                        // maybe, just maybe this will not break everything...
+						buffer[length++] = c;
+						tokenType = TType.Single;
 
 						// break the procedure if buffer overflowed!
 						if (length == MAX_WORD_LEN) 
@@ -264,11 +272,11 @@ namespace Lucene.Net.Analysis.CJK
 						{
 							start = offset - 1;
 							buffer[length++] = c;
-							tokenType = "double";
+							tokenType = TType.Double;
 						} 
 						else 
 						{
-							if (tokenType == "single") 
+							if (tokenType == TType.Single) 
 							{
 								offset--;
 								bufferIndex--;
@@ -279,7 +287,7 @@ namespace Lucene.Net.Analysis.CJK
 							else 
 							{
 								buffer[length++] = c;
-								tokenType = "double";
+								tokenType = TType.Double;
 
 								if (length == 2) 
 								{
@@ -309,7 +317,7 @@ namespace Lucene.Net.Analysis.CJK
 			}
 
 			return new Token(new String(buffer, 0, length), start, start + length,
-				tokenType
+				tokenType == TType.Word ? "word" : (tokenType == TType.Single ? "single" : "double")
 				);
 		}
 	}

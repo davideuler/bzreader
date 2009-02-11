@@ -124,28 +124,28 @@ namespace BzReader
 
             if (pos < 0)
             {
-                throw new Exception("Could not locate topic " + Name + " in block");
+                throw new Exception(String.Format(Properties.Resources.NoTopicInBlock, Name));
             }
 
             int textStart = raw.IndexOf("<text", pos, StringComparison.InvariantCultureIgnoreCase);
 
             if (textStart < 0)
             {
-                throw new Exception("Could not locate text marker for topic " + Name + " in block");
+                throw new Exception(String.Format(Properties.Resources.NoTextMarkerInBlock, Name));
             }
 
             int extractionStart = raw.IndexOf(">", textStart, StringComparison.InvariantCultureIgnoreCase);
 
             if (extractionStart < 0)
             {
-                throw new Exception("Could not locate text start for topic " + Name + " in block");
+                throw new Exception(String.Format(Properties.Resources.NoTextStartInBlock, Name));
             }
 
             int extractionEnd = raw.IndexOf("</text>", extractionStart, StringComparison.InvariantCultureIgnoreCase);
 
             if (extractionEnd < 0)
             {
-                throw new Exception("Could not locate text end for topic " + Name + " in block");
+                throw new Exception(String.Format(Properties.Resources.NoTextEndInBlock, Name));
             }
 
             string toFormat = raw.Substring(extractionStart + 1, extractionEnd - extractionStart - 1);
