@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SplitterDistance" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">130</Value>
+      <Value Profile="(Default)">121</Value>
     </Setting>
   </Settings>
 </SettingsFile>

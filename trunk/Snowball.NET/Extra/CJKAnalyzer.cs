@@ -82,7 +82,7 @@ namespace Lucene.Net.Analysis.CJK
 			"of", "on", "or", "s", "such", "t",
 			"that", "the", "their", "then",
 			"there", "these", "they", "this",
-			"to", "was", "will", "with", "",
+			"to", "was", "will", "with", 
 			"www"
 		};
 

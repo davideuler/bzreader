@@ -249,7 +249,7 @@ namespace BzReader
 
                 startTime = DateTime.Now;
                 elapsed = new TimeSpan(0);
-                ReportProgress(0, IndexingProgress.State.Running, "Indexing");
+                ReportProgress(0, IndexingProgress.State.Running, Properties.Resources.ProgressIndexing);
                 for (long i = 0; i < totalBlocks && !abortIndexing; i++)
                 {
                     ReportProgress((int)((double)(i * 100) / (double)totalBlocks), IndexingProgress.State.Running, String.Empty);
@@ -273,7 +273,7 @@ namespace BzReader
 
                     if (!completed)
                     {
-                        throw new Exception("UTF8 decoder could not complete the conversion");
+                        throw new Exception(Properties.Resources.UTFDecoderError);
                     }
 
                     // Construct a current string
@@ -310,11 +310,11 @@ namespace BzReader
                 // Wait till all the threads finish
                 while (activeThreads != 0)
                 {
-                    ReportProgress(0, IndexingProgress.State.Running, "Waiting for " +activeThreads.ToString() + " tokenizer threads to finish");
+                    ReportProgress(0, IndexingProgress.State.Running, String.Format(Properties.Resources.WaitingForTokenizers, activeThreads));
 
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
-                ReportProgress(0, IndexingProgress.State.Running, "Flushing documents to disk");
+                ReportProgress(0, IndexingProgress.State.Running, Properties.Resources.FlushingDocumentsToDisk);
 
                 Lucene.Net.Store.Directory dir = memoryIndexer.GetDirectory();
 
@@ -323,7 +323,7 @@ namespace BzReader
                 indexer.AddIndexes(new Lucene.Net.Store.Directory[] { dir });
 
                 memoryIndexer = null;
-                ReportProgress(0, IndexingProgress.State.Running, "Optimizing index");
+                ReportProgress(0, IndexingProgress.State.Running, Properties.Resources.OptimizingIndex);
 
                 indexer.Optimize();
 
@@ -454,7 +454,7 @@ namespace BzReader
                         }
                         else
                         {
-                            throw new Exception("A Wiki topic title carryover occurred, but no previous block has been stored");
+                            throw new Exception(Properties.Resources.CarryoverNoPrevBlock);
                         }
                     }
                 }
@@ -499,7 +499,7 @@ namespace BzReader
             {
                 if (!lastBlock)
                 {
-                    throw new Exception("No topics were found in the block");
+                    throw new Exception(Properties.Resources.NoTopicsInBlock);
                 }
             }
             else
@@ -528,7 +528,7 @@ namespace BzReader
 
             if (memoryIndexer.DocCount() >= MAX_RAMDIRECTORY_DOCS)
             {
-                ReportProgress(0, IndexingProgress.State.Running, "Flushing documents to disk");
+                ReportProgress(0, IndexingProgress.State.Running, Properties.Resources.FlushingDocumentsToDisk);
 
                 while (activeThreads != 0)
                 {
@@ -610,7 +610,7 @@ namespace BzReader
 
             if (status != bzip2.StatusCode.BZ_OK)
             {
-                throw new Exception("Failed loading " + filePath + " block starting at " + beginning.ToString() + ": " + status.ToString());
+                throw new Exception(String.Format(Properties.Resources.FailedLoadingBlock, filePath, beginning, status));
             }
 
             // Just some initial value, we will reallocate the buffer as needed
@@ -639,12 +639,12 @@ namespace BzReader
 
             if (decompressionBuf.Length > 32000000)
             {
-                throw new Exception("Failed uncompressing block starting at " + beginning.ToString() + ": too much memory required");
+                throw new Exception(String.Format(Properties.Resources.FailedUncompressingMemory, beginning));
             }
 
             if (status != bzip2.StatusCode.BZ_OK)
             {
-                throw new Exception("Failed uncompressing block starting at " + beginning.ToString() + ": " + status.ToString());
+                throw new Exception(String.Format(Properties.Resources.FailedUncompressingStatus, beginning, status));
             }
 
             // Exchange the raw buffer and the uncompressed one
@@ -663,7 +663,7 @@ namespace BzReader
         /// </summary>
         private void LocateBlocks()
         {
-            ReportProgress(0, IndexingProgress.State.Running, "Locating the blocks");
+            ReportProgress(0, IndexingProgress.State.Running, Properties.Resources.ProgressLocatingBlocks);
             FileInfo fi = new FileInfo(filePath);
             bz2_filesize = fi.Length;
             startTime = DateTime.Now;
@@ -676,12 +676,12 @@ namespace BzReader
 
             if (status != bzip2.StatusCode.BZ_OK)
             {
-                throw new Exception("Failed locating the blocks in " + filePath + ": " + status.ToString());
+                throw new Exception(String.Format(Properties.Resources.FailedLocatingBlocks, filePath, status));
             }
 
             if (totalBlocks < 1)
             {
-                throw new Exception("No bz2 blocks were found in " + filePath);
+                throw new Exception(String.Format(Properties.Resources.NoBlocksFound, filePath));
             }
         }
 
@@ -786,7 +786,7 @@ namespace BzReader
                 if (!ixr.indexExists ||
                     ixr.searcher == null)
                 {
-                    throw new Exception("The index does not exist for " + ixr.filePath);
+                    throw new Exception(String.Format(Properties.Resources.IndexDoesNotExist, ixr.filePath));
                 }
             }
 
@@ -825,7 +825,7 @@ namespace BzReader
 
                         if (i >= 30)
                         {
-                            throw new Exception("Failed starting the search work item due to timeout");
+                            throw new Exception(Properties.Resources.FailedStartingSearch);
                         }
 
                         ixr.searchRunning = true;
@@ -850,7 +850,7 @@ namespace BzReader
 
                         if (i >= 30)
                         {
-                            throw new Exception("Failed finishing the search work item due to timeout");
+                            throw new Exception(Properties.Resources.FailedFinishingSearch);
                         }
                     }
                 }
@@ -991,19 +991,26 @@ namespace BzReader
             ip.Message = message;
 
             // a naive ETA formula: ETA = ElapsedMinutes * 100 / percentDone - Elapsed
+            
             if (percentage > 0)
             {
                 elapsed = (DateTime.Now.Subtract(startTime));
                 eta = (int)(elapsed.TotalMinutes * 100 / percentage - elapsed.TotalMinutes);       
+                
                 if (eta <= 0)
-                    ip.ETA = "in a jiffy!";
+                {
+                    ip.ETA = Properties.Resources.FinishingSoon;
+                }
                 else 
                 {
-                    TimeSpan remaining = TimeSpan.FromMinutes(eta+1);
-                    ip.ETA = "~ " + (int)remaining.TotalHours + " hours and " + remaining.Minutes +" minutes";
+                    TimeSpan remaining = TimeSpan.FromMinutes(eta + 1);
+                    ip.ETA = String.Format(Properties.Resources.FinishingInHours, (int)remaining.TotalHours, remaining.Minutes);
                 }
             }
-            else ip.ETA = "n/a";
+            else
+            {
+                ip.ETA = "n/a";
+            }
             
             OnProgressChanged(new ProgressChangedEventArgs(percentage, ip));
         }

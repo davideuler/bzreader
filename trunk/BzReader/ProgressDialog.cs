@@ -47,7 +47,7 @@ namespace BzReader
             {
                 btnDone.Enabled = false;
 
-                textBox.AppendText("Aborting" + Environment.NewLine);
+                textBox.AppendText(Properties.Resources.AbortingIndexing + Environment.NewLine);
 
                 ixr.AbortIndex();
             }
@@ -70,7 +70,7 @@ namespace BzReader
             }
             if (!String.IsNullOrEmpty(ip.ETA))
             {
-                labelETA.Text = "ETA: "+ip.ETA;
+                labelETA.Text = String.Format(Properties.Resources.ETA, ip.ETA);
             }
 
             if (e.ProgressPercentage > 0)
@@ -80,27 +80,18 @@ namespace BzReader
 
             if (ip.IndexingState == IndexingProgress.State.Failure)
             {
-                btnDone.Text = "Close";
+                btnDone.Text = Properties.Resources.CloseIndexingForm;
             }
 
             if (ip.IndexingState == IndexingProgress.State.Finished)
             {
                 indexingRunning = false;
-                labelETA.Text = "All done!";
-                if (!btnDone.Enabled)
-                {
-                    // Due to abort
 
-                    DialogResult = DialogResult.Abort;
-                    Close();
-                }
-                else if (btnDone.Text.Equals("Cancel", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // Due to proper finish
+                labelETA.Text = Properties.Resources.IndexingDoneETA;
 
-                    DialogResult = DialogResult.OK;
-                    Close();
-                }
+                DialogResult = btnDone.Enabled ? DialogResult.OK : DialogResult.Abort;
+
+                Close();
             }
         }
 

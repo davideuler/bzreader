@@ -28,6 +28,7 @@ namespace BzReader
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressDialog));
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.textBox = new System.Windows.Forms.TextBox();
             this.btnDone = new System.Windows.Forms.Button();
@@ -36,46 +37,32 @@ namespace BzReader
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 12);
+            resources.ApplyResources(this.progressBar, "progressBar");
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(230, 23);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar.TabIndex = 0;
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(12, 64);
-            this.textBox.Multiline = true;
+            resources.ApplyResources(this.textBox, "textBox");
             this.textBox.Name = "textBox";
             this.textBox.ReadOnly = true;
-            this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox.Size = new System.Drawing.Size(230, 65);
-            this.textBox.TabIndex = 1;
             // 
             // btnDone
             // 
-            this.btnDone.Location = new System.Drawing.Point(89, 135);
+            resources.ApplyResources(this.btnDone, "btnDone");
             this.btnDone.Name = "btnDone";
-            this.btnDone.Size = new System.Drawing.Size(75, 23);
-            this.btnDone.TabIndex = 2;
-            this.btnDone.Text = "Cancel";
             this.btnDone.UseVisualStyleBackColor = true;
             this.btnDone.Click += new System.EventHandler(this.btnDone_Click);
             // 
             // labelETA
             // 
-            this.labelETA.AutoSize = true;
-            this.labelETA.Location = new System.Drawing.Point(19, 42);
+            resources.ApplyResources(this.labelETA, "labelETA");
             this.labelETA.Name = "labelETA";
-            this.labelETA.Size = new System.Drawing.Size(43, 13);
-            this.labelETA.TabIndex = 3;
-            this.labelETA.Text = "ETA: ...";
             // 
             // ProgressDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(254, 170);
             this.ControlBox = false;
             this.Controls.Add(this.labelETA);
             this.Controls.Add(this.btnDone);
@@ -86,8 +73,6 @@ namespace BzReader
             this.MinimizeBox = false;
             this.Name = "ProgressDialog";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Indexing progress";
             this.Shown += new System.EventHandler(this.ProgressDialog_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
