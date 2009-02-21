@@ -67,6 +67,10 @@
       <DependentUpon>ProgressDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutBox.es-ES.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="AboutBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -74,6 +78,10 @@
     <EmbeddedResource Include="AboutBox.uk-UA.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BrowseForm.es-ES.resx">
+      <DependentUpon>BrowseForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="BrowseForm.resx">
       <SubType>Designer</SubType>
@@ -83,9 +91,16 @@
       <SubType>Designer</SubType>
       <DependentUpon>BrowseForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProgressDialog.es-ES.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProgressDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties.Resources.es-ES.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties.Resources.uk-UA.resx">
       <SubType>Designer</SubType>
