@@ -1,6 +1,11 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.10==
+
+  * Added the ability to translate BzReader interface. Two translations added - Ukrainian and Spanish (thanks to Smita Varghese!)
+  * Added the ability to install BzReader either for all users or per-user
+
 ==1.0.9==
 
   * Fixed a bug in indexing code with the quote character in the article title and incorrect external links. Now you can follow external links just like internal.
