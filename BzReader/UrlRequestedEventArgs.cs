@@ -27,6 +27,10 @@ namespace BzReader
         /// </summary>
         private string indexName;
         /// <summary>
+        /// The TeX equation embedded into Wikipedia
+        /// </summary>
+        private string texEquation;
+        /// <summary>
         /// Whether this is a redirect response
         /// </summary>
         private bool redirect;
@@ -35,13 +39,13 @@ namespace BzReader
         /// </summary>
         private string redirectTarget;
         /// <summary>
+        /// The MIME type of the response
+        /// </summary>
+        private string mimeType;
+        /// <summary>
         /// The response string
         /// </summary>
-        private string response;
-        /// <summary>
-        /// The port the web server is listening on
-        /// </summary>
-        private int serverPort;
+        private byte[] response;
 
         /// <summary>
         /// The requested topic name
@@ -78,64 +82,76 @@ namespace BzReader
         }
 
         /// <summary>
+        /// The TeX equation embedded into Wikipedia
+        /// </summary>
+        public string TeXEquation
+        {
+            get { return texEquation; }
+            set { texEquation = value; }
+        }
+
+        /// <summary>
         /// Response string
         /// </summary>
-        public string Response
+        public byte[] Response
         {
             get { return response; }
             set { response = value; }
         }
 
         /// <summary>
+        /// The MIME type of the response
+        /// </summary>
+        public string MimeType
+        {
+            get { return mimeType; }
+            set { mimeType = value; }
+        }
+
+        /// <summary>
         /// The URL that is/was used to fetch this document
         /// </summary>
-        public string Url
+        public static string Url(string indexName, string topicName, int port)
         {
-            get { return String.Format("http://localhost:{0}/?topic={1}&index={2}", serverPort, HttpUtility.UrlEncode(topicName), HttpUtility.UrlEncode(indexName)); }
+            return String.Format("http://localhost:{0}/?topic={1}&index={2}", port, HttpUtility.UrlEncode(topicName), HttpUtility.UrlEncode(indexName));
+        }
+
+        /// <summary>
+        /// The TeX equation URL
+        /// </summary>
+        /// <param name="equation">Equation text</param>
+        /// <param name="port">Port the server is listening on</param>
+        /// <returns>Encoded URL</returns>
+        public static string TeXUrl(string equation, int port)
+        {
+            return String.Format("http://localhost:{0}/?tex={1}", port, HttpUtility.UrlEncode(equation));
         }
 
         /// <summary>
         /// The url to the redirected topic
         /// </summary>
-        public string RedirectUrl
+        public string RedirectUrl(int port)
         {
-            get { return String.Format("http://localhost:{0}/?topic={1}&index={2}", serverPort, HttpUtility.UrlEncode(redirectTarget), HttpUtility.UrlEncode(indexName)); }
+            return String.Format("http://localhost:{0}/?topic={1}&index={2}", port, HttpUtility.UrlEncode(redirectTarget), HttpUtility.UrlEncode(indexName));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlRequestedEventArgs"/> class.
         /// </summary>
         /// <param name="aUrl">A URL which was request by web browser.</param>
-        public UrlRequestedEventArgs(string aUrl, int port)
+        public UrlRequestedEventArgs(string aUrl)
             : base()
         {
-            serverPort = port;
-
             NameValueCollection nvc = HttpUtility.ParseQueryString(aUrl.Substring(1));
 
             topicName = nvc["topic"];
             indexName = nvc["index"];
+            texEquation = nvc["tex"];
 
             if (String.IsNullOrEmpty(topicName))
             {
                 topicName = HttpUtility.UrlDecode(aUrl.Substring(1));
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UrlRequestedEventArgs"/> class.
-        /// </summary>
-        /// <param name="page">The page we are to generate the URL for</param>
-        /// <param name="port">The port our server is listening on</param>
-        public UrlRequestedEventArgs(PageInfo page, int port)
-            : base()
-        {
-            topicName = page.Name;
-            indexName = page.Indexer.File;
-            redirect = !String.IsNullOrEmpty(page.RedirectToTopic);
-            redirectTarget = page.RedirectToTopic;
-
-            serverPort = port;
         }
     };
 }

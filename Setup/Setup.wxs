@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-		<Product Id="32BE5003-DD41-4A84-9F19-0F2E72BFBB80" Name="BzReader" Language="1033" Version="1.0.10.0" Manufacturer="Halleck Software" UpgradeCode="275A7BD6-98EF-4E1F-A2B1-9175AF8327C2">
+		<Product Id="32BE5003-DD41-4A84-9F19-0F2E72BFBB80" Name="BzReader" Language="1033" Version="1.0.11.0" Manufacturer="Halleck Software" UpgradeCode="275A7BD6-98EF-4E1F-A2B1-9175AF8327C2">
 		<Package InstallerVersion="200" Compressed="yes" Platform="x86" />
 		<Media Id="1" Cabinet="Setup.cab" EmbedCab="yes" />
 
@@ -38,6 +38,9 @@
 					<Component Id="bzip2.dll" Guid="9159E23A-1142-473E-987B-74FE53C0AFD6">
 						<File Id="bzip2.dll" KeyPath="yes" ProcessorArchitecture="x86" Vital="yes" Source="$(sys.SOURCEFILEDIR)..\BzReader\bin\$(var.Configuration)\bzip2.dll" />
 					</Component>
+					<Component Id="MimeTeX.dll" Guid="F896ACA1-3C89-4B49-9DC9-6C6455523562">
+						<File Id="MimeTeX.dll" KeyPath="yes" ProcessorArchitecture="x86" Vital="yes" Source="$(sys.SOURCEFILEDIR)..\BzReader\bin\$(var.Configuration)\MimeTeX.dll" />
+					</Component>
 					<Directory Id="ProgramMenuFolder" Name="ProgramMenuFolder">
 						<Directory Id="ProgramMenuDir" Name="BzReader" />
 					</Directory>
@@ -53,6 +56,7 @@
 			<ComponentRef Id="bzip2.dll" />
 			<ComponentRef Id="BzReader.resources.es_ES.dll" />
 			<ComponentRef Id="BzReader.resources.uk_UA.dll" />
+			<ComponentRef Id="MimeTeX.dll" />
 		</Feature>
 
 		<Condition Message="You need to have Microsoft .NET Framework Runtime v2.0 or later to use this product">MsiNetAssemblySupport &gt;= "2.0.50727"</Condition>

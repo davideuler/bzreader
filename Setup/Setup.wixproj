@@ -38,6 +38,11 @@
       <Project>{a28ed684-0be8-43e0-817d-6d0e5867b04b}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\MimeTeX\MimeTeX.vcproj">
+      <Name>MimeTeX</Name>
+      <Project>{ef21a39b-a187-4663-be7d-336577c8691f}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

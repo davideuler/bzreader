@@ -212,6 +212,11 @@ namespace BzReader
             string response = "Not found";
             string redirect = String.Empty;
 
+            if (!String.IsNullOrEmpty(e.TeXEquation))
+            {
+                return;
+            }
+
             string topic = e.TopicName.Replace('_', ' ').Trim();
 
             if (topic.Contains("#"))
@@ -317,7 +322,8 @@ namespace BzReader
 
             e.Redirect = !String.IsNullOrEmpty(redirect);
             e.RedirectTarget = redirect;
-            e.Response = response;
+            e.Response = Encoding.UTF8.GetBytes(response);
+            e.MimeType = "text/html";
 
             if (String.IsNullOrEmpty(redirect))
             {

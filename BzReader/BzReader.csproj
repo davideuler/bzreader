@@ -58,6 +58,7 @@
     <Compile Include="HitCollection.cs" />
     <Compile Include="Indexer.cs" />
     <Compile Include="IndexingProgress.cs" />
+    <Compile Include="MimeTeX.cs" />
     <Compile Include="PageInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressDialog.cs">
@@ -151,6 +152,8 @@
   -->
   <PropertyGroup>
     <PreBuildEvent>copy /Y "$(SolutionDir)\bzip2\$(ConfigurationName)\bzip2.dll" "$(TargetDir)"
-copy /Y "$(SolutionDir)\bzip2\$(ConfigurationName)\bzip2.pdb" "$(TargetDir)"</PreBuildEvent>
+copy /Y "$(SolutionDir)\bzip2\$(ConfigurationName)\bzip2.pdb" "$(TargetDir)"
+copy /Y "$(SolutionDir)\MimeTeX\$(ConfigurationName)\MimeTeX.dll" "$(TargetDir)"
+copy /Y "$(SolutionDir)\MimeTeX\$(ConfigurationName)\MimeTeX.pdb" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>
