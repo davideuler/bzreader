@@ -47,6 +47,7 @@ namespace ScrewTurn.Wiki
 		private static Regex fullCode = new Regex(@"@@.+?@@", RegexOptions.Compiled | RegexOptions.Singleline);
 		private static Regex username = new Regex(@"\{username\}", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 		private static Regex javascript = new Regex(@"\<script.*?\>.*?\<\/script\>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static Regex math = new Regex(@"\<math\>(.|\n|\r)+?\<\/math\>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         private static string tocTitlePlaceHolder = String.Empty;
 		private static string upReplacement = "GetFile.aspx?File=";
@@ -65,7 +66,7 @@ namespace ScrewTurn.Wiki
 
 			StringBuilder sb = new StringBuilder(raw);
 			Match match;
-			string tmp, a, n, url, title, bigUrl;
+			string tmp, a, n;
 			StringBuilder dummy; // Used for temporary string manipulation inside formatting cycles
 			bool done = false;
 			List<int> noWikiBegin = new List<int>(), noWikiEnd = new List<int>();
@@ -122,6 +123,20 @@ namespace ScrewTurn.Wiki
 			//sb.Replace("-->", "(^_$)");
 
 			ComputeNoWiki(sb.ToString(), ref noWikiBegin, ref noWikiEnd);
+
+            match = math.Match(sb.ToString());
+            while (match.Success)
+            {
+                if (!IsNoWikied(match.Index, noWikiBegin, noWikiEnd, out end))
+                {
+                    sb.Remove(match.Index, match.Length);
+                    sb.Insert(match.Index,
+                        String.Format("<img src=\"{0}\" />",
+                            WebServer.Instance.GenerateTeXUrl(match.Value.Substring(6, match.Value.Length - 13))));
+                }
+                ComputeNoWiki(sb.ToString(), ref noWikiBegin, ref noWikiEnd);
+                match = math.Match(sb.ToString(), end);
+            }
 
 			// Before Producing HTML
 			match = esc.Match(sb.ToString());
@@ -271,7 +286,7 @@ namespace ScrewTurn.Wiki
 					match = link.Match(sb.ToString(), end);
 					continue;
 				}*/
-				if(match.Value.Equals("[]") || match.Value.Equals("[[]]")) continue; // Prevents formatting emtpy links
+				if(match.Value.Equals("[]") || match.Value.Equals("[[]]")) continue; // Prevents formatting empty links
 				done = false;
                 tmp = match.Value.Trim('[', ']').Trim();
 				sb.Remove(match.Index, match.Length);
@@ -1245,7 +1260,7 @@ namespace ScrewTurn.Wiki
 			if(lines[1].Length >= 3 && lines[1].Trim().StartsWith("|+")) {
 				// Table caption
 				sb.Append("<caption>");
-				sb.Append(lines[1].Substring(3));
+				sb.Append(lines[1].Substring(2));
 				sb.Append("</caption>");
 				count++;
 			}
@@ -1258,24 +1273,24 @@ namespace ScrewTurn.Wiki
 					sb.Append("<tr");
 					if(lines[i].Length > 2) {
 						sb.Append(" ");
-						sb.Append(lines[i].Substring(3));
+						sb.Append(lines[i].Substring(2));
 					}
 					sb.Append(">");
 				}
 				else if(lines[i].Trim().StartsWith("|")) {
 					// Cell
-					if(lines[i].Length < 3) continue;
-					item = lines[i].Substring(2);
+					if(lines[i].Length < 2) continue;
+					item = lines[i].Substring(1);
 					if(item.IndexOf(" || ") != -1) {
 						sb.Append("<td>");
 						sb.Append(item.Replace(" || ", "</td><td>"));
 						sb.Append("</td>");
 					}
-					else if(item.IndexOf(" | ") != -1) {
+					else if(item.IndexOf("|") != -1) {
 						sb.Append("<td ");
-						sb.Append(item.Substring(0, item.IndexOf(" | ")));
+						sb.Append(item.Substring(0, item.IndexOf("|")));
 						sb.Append(">");
-						sb.Append(item.Substring(item.IndexOf(" | ") + 3));
+						sb.Append(item.Substring(item.IndexOf("|") + 1));
 						sb.Append("</td>");
 					}
 					else {
@@ -1286,8 +1301,8 @@ namespace ScrewTurn.Wiki
 				}
 				else if(lines[i].Trim().StartsWith("!")) {
 					// Header
-					if(lines[i].Length < 3) continue;
-					item = lines[i].Substring(2);
+					if(lines[i].Length < 2) continue;
+					item = lines[i].Substring(1);
 					if(item.IndexOf(" !! ") != -1) {
 						sb.Append("<th>");
 						sb.Append(item.Replace(" !! ", "</th><th>"));

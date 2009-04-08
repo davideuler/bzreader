@@ -56,6 +56,10 @@ namespace BzReader
         /// </summary>
         private WebServer()
         {
+            // Hook up TeX renderer in here
+
+            this.UrlRequested += new UrlRequestedHandler(MimeTeX.WebServer_UrlRequested);
+
             listener = new TcpListener(IPAddress.Loopback, 0);
 
             listener.Start();
@@ -95,7 +99,17 @@ namespace BzReader
         /// <returns>The URL</returns>
         public string GenerateUrl(PageInfo page)
         {
-            return new UrlRequestedEventArgs(page, port).Url;
+            return UrlRequestedEventArgs.Url(page.Indexer.File, page.Name, port);
+        }
+
+        /// <summary>
+        /// Generates a TeX equation URL using the provided equation text
+        /// </summary>
+        /// <param name="equation">Equation text</param>
+        /// <returns>TeX equation image URL</returns>
+        public string GenerateTeXUrl(string equation)
+        {
+            return UrlRequestedEventArgs.TeXUrl(equation, port);
         }
 
         /// <summary>
@@ -105,7 +119,9 @@ namespace BzReader
         /// <param name="bytesCount">The number of bytes in the response stream</param>
         /// <param name="statusCode">HTTP status code</param>
         /// <param name="socket">The socket where to write to</param>
-        public void SendHeader(string httpVersion, int bytesCount, string redirectLocation, Socket socket)
+        /// <param name="mime">The MIME type of the response</param>
+        /// <param name="redirectLocation">The location to redirect the browser to</param>
+        public void SendHeader(string httpVersion, int bytesCount, string redirectLocation, Socket socket, string mime)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -113,7 +129,8 @@ namespace BzReader
             sb.Append(" ");
             sb.Append(String.IsNullOrEmpty(redirectLocation) ? "200" : "302");
             sb.AppendLine();
-            sb.AppendLine("Content-Type: text/html");
+            sb.Append("Content-Type: ");
+            sb.AppendLine(mime);
             
             if (!String.IsNullOrEmpty(redirectLocation))
             {
@@ -183,24 +200,29 @@ namespace BzReader
                         string httpVersion = requestParts[2];
                         string url = requestParts[1];
 
-                        string response = String.Empty;
+                        byte[] response = new byte[0];
                         string redirectUrl = String.Empty;
+                        string mime = "text/html";
 
                         if (UrlRequested != null)
                         {
-                            UrlRequestedEventArgs urea = new UrlRequestedEventArgs(url, port);
+                            UrlRequestedEventArgs urea = new UrlRequestedEventArgs(url);
 
                             UrlRequested(this, urea);
 
-                            redirectUrl = urea.Redirect ? urea.RedirectUrl : String.Empty;
-                            response = urea.Redirect ? "302 Moved" : urea.Response;
+                            redirectUrl = urea.Redirect ? urea.RedirectUrl(port) : String.Empty;
+
+                            if (urea.Response != null)
+                            {
+                                response = urea.Response;
+                            }
+
+                            mime = urea.MimeType;
                         }
 
-                        byte[] sendBuf = Encoding.UTF8.GetBytes(response);
+                        SendHeader(httpVersion, response.Length, redirectUrl, socket, mime);
 
-                        SendHeader(httpVersion, sendBuf.Length, redirectUrl, socket);
-
-                        socket.Send(sendBuf);
+                        socket.Send(response);
                     }
 
                     lock (this)
