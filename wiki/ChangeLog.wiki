@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.12==
+
+  * Fixed a minor issue when trying to search for the empty string
+
 ==1.0.11==
 
   * Added the ability to render the mathematical formulas (thanks to excellent MimeTeX application)
