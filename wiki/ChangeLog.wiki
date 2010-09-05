@@ -1,6 +1,10 @@
 #summary The history of changes between the versions of BzReader.
 #labels Featured
 
+==1.0.13==
+
+  * Fixed an issue when the content was not showing in Windows 7 + IE8
+
 ==1.0.12==
 
   * Fixed a minor issue when trying to search for the empty string
